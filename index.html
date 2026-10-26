@@ -4,180 +4,300 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Campaign RPG</title>
+  <title>Realmfall — RPG</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      overflow: hidden;
-      background: #10151b;
-      color: white;
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      color: #f5ead7;
+      background:
+        radial-gradient(ellipse at top, #423323 0%, #191711 48%, #0b0c0d 100%);
+      font-family: Georgia, serif;
     }
-    #hud {
-      position: fixed;
-      z-index: 2;
-      top: 16px;
-      left: 16px;
-      padding: 14px 18px;
-      border: 1px solid #52616b;
+
+    .panel {
+      width: min(100%, 440px);
+      padding: 32px;
+      background: #171713;
+      border: 1px solid #806b43;
       border-radius: 12px;
-      background: #101820dd;
-      line-height: 1.7;
+      box-shadow: 0 20px 70px #0009;
     }
-    #hint { color: #b8d8c0; font-size: 13px; }
-    #error {
-      position: fixed;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      color: #ffb4a9;
-      font-size: 13px;
+
+    h1 {
+      margin: 0;
+      color: #e7c77f;
+      text-align: center;
+      letter-spacing: 4px;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin: 10px 0 26px;
+      color: #b5a98f;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 22px; }
+
+    button, input { font: inherit; }
+
+    .tabs button {
+      flex: 1;
+      padding: 11px 6px;
+      color: #c9bda6;
+      background: #25241e;
+      border: 1px solid #494333;
+      cursor: pointer;
+    }
+
+    .tabs button.active {
+      color: #ffe4a4;
+      border-color: #c7a45e;
+      background: #393020;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 7px;
+      color: #e2d5bd;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #4d493c;
+      border-radius: 5px;
+      color: white;
+      background: #0d0e0c;
+      outline: none;
+    }
+
+    input:focus { border-color: #c7a45e; }
+
+    .submit {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      color: #21190c;
+      background: #d7b56d;
+      border: 0;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .6; cursor: wait; }
+
+    #message {
+      min-height: 40px;
+      margin: 16px 0 0;
+      color: #e8cb91;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    #game { text-align: center; }
+    #game h2 { color: #e7c77f; }
+    .hidden { display: none !important; }
+
+    .note {
+      color: #aaa18d;
+      font: 12px/1.5 Arial, sans-serif;
+      margin-top: 18px;
     }
   </style>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
-    }
-  }
-  </script>
 </head>
 <body>
-  <div id="hud">
-    <strong>CAMPAIGN RPG</strong><br>
-    Gebied: <span id="area">1</span><br>
-    Speler: <span id="position">0, 0</span><br>
-    <span id="hint">Bewegen: WASD of pijltjestoetsen</span>
-  </div>
-  <div id="error"></div>
+  <main class="panel">
+    <section id="auth">
+      <h1>REALMFALL</h1>
+      <p class="subtitle">Your legend begins here.</p>
 
-  <script type="module">
-    import * as THREE from "three";
+      <div class="tabs">
+        <button id="loginTab" class="active" type="button">INLOGGEN</button>
+        <button id="signupTab" type="button">ACCOUNT MAKEN</button>
+      </div>
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x9bc5d9);
-    scene.fog = new THREE.Fog(0x9bc5d9, 25, 65);
+      <form id="authForm">
+        <div id="usernameField" class="hidden">
+          <label for="username">Gebruikersnaam</label>
+          <input id="username" minlength="3" maxlength="20"
+            pattern="[A-Za-z0-9_-]{3,20}"
+            autocomplete="username"
+            placeholder="Bijv. ShadowKnight">
+          <p class="note">3–20 tekens: letters, cijfers, _ of -</p>
+        </div>
 
-    const camera = new THREE.PerspectiveCamera(
-      65, innerWidth / innerHeight, 0.1, 1000
-    );
+        <label for="email">E-mailadres</label>
+        <input id="email" type="email" required
+          autocomplete="email" placeholder="jij@voorbeeld.nl">
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    document.body.appendChild(renderer.domElement);
+        <label for="password">Wachtwoord</label>
+        <input id="password" type="password" required
+          minlength="8" autocomplete="current-password"
+          placeholder="Minimaal 8 tekens">
 
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x42513b, 2));
+        <button id="submit" class="submit" type="submit">
+          INLOGGEN
+        </button>
+      </form>
 
-    const sun = new THREE.DirectionalLight(0xffffff, 2.5);
-    sun.position.set(8, 15, 5);
-    sun.castShadow = true;
-    scene.add(sun);
+      <p id="message" role="status" aria-live="polite"></p>
+    </section>
 
-    const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(100, 100),
-      new THREE.MeshStandardMaterial({ color: 0x477748 })
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add(ground);
+    <section id="game" class="hidden">
+      <h1>REALMFALL</h1>
+      <h2>Welkom, <span id="playerName"></span>!</h2>
+      <p>Je account werkt. Jouw avontuur begint binnenkort.</p>
+      <p class="note">
+        Volgende stap: je 3D-personage en de sociale bar-lobby.
+      </p>
+      <button id="logout" class="submit" type="button">UITLOGGEN</button>
+      <p id="gameMessage" role="status"></p>
+    </section>
+  </main>
 
-    const grid = new THREE.GridHelper(60, 60, 0xc3d8a5, 0x688a5d);
-    grid.position.y = 0.015;
-    scene.add(grid);
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://jpfafbpeexjdljebhzzo.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_vRMUoWgWM_5WOtjysEhWZQ_xni9HEiV";
 
-    // Tijdelijk spelersmodel; later vervangen we dit door je GLB.
-    const player = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.CapsuleGeometry(0.42, 0.8, 4, 8),
-      new THREE.MeshStandardMaterial({ color: 0x3978e8 })
-    );
-    body.position.y = 0.82;
-    body.castShadow = true;
-    player.add(body);
+    const { createClient } = window.supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const head = new THREE.Mesh(
-      new THREE.SphereGeometry(0.27, 12, 10),
-      new THREE.MeshStandardMaterial({ color: 0xe2bc96 })
-    );
-    head.position.y = 1.55;
-    head.castShadow = true;
-    player.add(head);
-    scene.add(player);
+    const auth = document.getElementById("auth");
+    const game = document.getElementById("game");
+    const form = document.getElementById("authForm");
+    const message = document.getElementById("message");
+    const usernameField = document.getElementById("usernameField");
+    const usernameInput = document.getElementById("username");
+    const submit = document.getElementById("submit");
+    let mode = "login";
 
-    // Testobstakels; later vervangen door echte vijanden.
-    for (const [x, z] of [[4,-3], [-5,-7], [6,5], [-7,4]]) {
-      const rock = new THREE.Mesh(
-        new THREE.DodecahedronGeometry(0.8),
-        new THREE.MeshStandardMaterial({ color: 0x686d75 })
-      );
-      rock.position.set(x, 0.65, z);
-      rock.castShadow = true;
-      scene.add(rock);
+    function setMode(nextMode) {
+      mode = nextMode;
+      const signingUp = mode === "signup";
+      usernameField.classList.toggle("hidden", !signingUp);
+      usernameInput.required = signingUp;
+      document.getElementById("loginTab").classList.toggle("active", !signingUp);
+      document.getElementById("signupTab").classList.toggle("active", signingUp);
+      submit.textContent = signingUp ? "ACCOUNT AANMAKEN" : "INLOGGEN";
+      document.getElementById("password").autocomplete =
+        signingUp ? "new-password" : "current-password";
+      message.textContent = "";
     }
 
-    const keys = {};
-    addEventListener("keydown", e => {
-      keys[e.key.toLowerCase()] = true;
-      if (["arrowup","arrowdown","arrowleft","arrowright"," "]
-          .includes(e.key.toLowerCase())) e.preventDefault();
-    });
-    addEventListener("keyup", e => {
-      keys[e.key.toLowerCase()] = false;
-    });
-    addEventListener("blur", () => {
-      for (const key in keys) keys[key] = false;
-    });
+    document.getElementById("loginTab").onclick = () => setMode("login");
+    document.getElementById("signupTab").onclick = () => setMode("signup");
 
-    const followOffset = new THREE.Vector3(0, 7, 9);
-    camera.position.copy(player.position).add(followOffset);
-    camera.lookAt(player.position);
+    async function showProfile(user) {
+      const { data, error } = await db
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
 
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const dt = Math.min(clock.getDelta(), 0.05);
-
-      let x = 0, z = 0;
-      if (keys["w"] || keys["arrowup"]) z -= 1;
-      if (keys["s"] || keys["arrowdown"]) z += 1;
-      if (keys["a"] || keys["arrowleft"]) x -= 1;
-      if (keys["d"] || keys["arrowright"]) x += 1;
-
-      if (x !== 0 || z !== 0) {
-        const length = Math.hypot(x, z);
-        x /= length;
-        z /= length;
-        player.position.x += x * 5 * dt;
-        player.position.z += z * 5 * dt;
-        player.rotation.y = Math.atan2(x, z);
+      if (error) {
+        throw new Error("Je bent ingelogd, maar je profiel kon niet worden geladen. Controleer de SQL-trigger en profieltabel.");
       }
 
-      const target = player.position.clone().add(followOffset);
-      camera.position.lerp(target, 1 - Math.exp(-5 * dt));
-      camera.lookAt(
-        player.position.x,
-        player.position.y + 0.7,
-        player.position.z
-      );
-
-      document.getElementById("position").textContent =
-        `${player.position.x.toFixed(1)}, ${player.position.z.toFixed(1)}`;
-
-      renderer.render(scene, camera);
+      document.getElementById("playerName").textContent = data.username;
+      auth.classList.add("hidden");
+      game.classList.remove("hidden");
     }
 
-    addEventListener("resize", () => {
-      camera.aspect = innerWidth / innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(innerWidth, innerHeight);
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      message.textContent = "";
+      submit.disabled = true;
+
+      try {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (SUPABASE_URL.includes("VUL_HIER") ||
+            SUPABASE_KEY.includes("VUL_HIER")) {
+          throw new Error("Vul eerst je Supabase Project URL en Publishable Key in de code in.");
+        }
+
+        if (mode === "signup") {
+          const username = usernameInput.value.trim();
+
+          if (!/^[A-Za-z0-9_-]{3,20}$/.test(username)) {
+            throw new Error("Gebruik 3–20 letters, cijfers, _ of - voor je gebruikersnaam.");
+          }
+
+          const { data, error } = await db.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { username }
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session) {
+            await showProfile(data.user);
+          } else {
+            message.textContent =
+              "Account aangemaakt! Controleer je e-mail om je account te bevestigen en log daarna in.";
+          }
+        } else {
+          const { data, error } = await db.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (error) throw error;
+          await showProfile(data.user);
+        }
+      } catch (error) {
+        message.textContent = error.message || "Er ging iets mis.";
+      } finally {
+        submit.disabled = false;
+      }
     });
 
-    animate();
+    document.getElementById("logout").addEventListener("click", async () => {
+      const button = document.getElementById("logout");
+      button.disabled = true;
+      const { error } = await db.auth.signOut();
+      button.disabled = false;
+
+      if (error) {
+        document.getElementById("gameMessage").textContent = error.message;
+        return;
+      }
+
+      game.classList.add("hidden");
+      auth.classList.remove("hidden");
+      message.textContent = "Je bent uitgelogd.";
+    });
+
+    async function restoreSession() {
+      const { data, error } = await db.auth.getSession();
+      if (error || !data.session) return;
+
+      try {
+        await showProfile(data.session.user);
+      } catch (err) {
+        message.textContent = err.message;
+        auth.classList.remove("hidden");
+        game.classList.add("hidden");
+      }
+    }
+
+    restoreSession();
   </script>
 </body>
 </html>
