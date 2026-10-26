@@ -719,8 +719,33 @@ function applyModelColor(color) {
         });
 
         loadedModel = model;
-        modelRoot.add(model);
-        applyModelColor(skinColor.value);
+modelRoot.add(model);
+
+// Laad het losse shirt boven op het spelersmodel.
+try {
+  const shirtGltf = await loader.loadAsync("models/navy_shirt.glb");
+
+  if (version !== loadVersion) {
+    modelRoot.remove(model);
+    return;
+  }
+
+  const shirt = shirtGltf.scene;
+
+  // Het shirt gebruikt dezelfde schaal als het spelersmodel.
+  shirt.scale.copy(model.scale);
+
+  // Begin met dezelfde positie en rotatie als het spelersmodel.
+  shirt.position.copy(model.position);
+  shirt.rotation.copy(model.rotation);
+
+  modelRoot.add(shirt);
+  window.loadedShirt = shirt;
+} catch (error) {
+  console.error("Shirt kon niet worden geladen:", error);
+}
+
+applyModelColor(skinColor.value);
         camera.position.set(0, 1.4, 5.5);
         camera.lookAt(0, 1.2, 0);
         creatorMessage.textContent = "Model geladen!";
