@@ -730,30 +730,29 @@ try {
     return;
   }
 
-  const shirt = shirtGltf.scene;
+const shirt = shirtGltf.scene;
 
-// Bepaal de afmetingen van het lichaam en het shirt.
+// Afmetingen van het spelersmodel
 const bodyBounds = new THREE.Box3().setFromObject(model);
-const shirtBounds = new THREE.Box3().setFromObject(shirt);
-
 const bodySize = bodyBounds.getSize(new THREE.Vector3());
-const shirtSize = shirtBounds.getSize(new THREE.Vector3());
 
-// Maak het shirt kleiner als het groter is dan het lichaam.
-const scaleFactor = Math.min(
-  bodySize.x / shirtSize.x,
-  bodySize.y / shirtSize.y,
-  bodySize.z / shirtSize.z,
-  1
-);
+// Afmetingen van het shirt voordat het aan het lichaam hangt
+const shirtBounds = new THREE.Box3().setFromObject(shirt);
+const shirtSize = shirtBounds.getSize(new THREE.Vector3());
+const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
+
+// Schaal het shirt ten opzichte van de breedte van de romp
+const targetWidth = bodySize.x * 0.48;
+const scaleFactor = targetWidth / shirtSize.x;
 
 shirt.scale.setScalar(scaleFactor);
 
-// Zet het shirt op dezelfde middenpositie als het lichaam.
-const bodyCenter = bodyBounds.getCenter(new THREE.Vector3());
-const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
-
-shirt.position.set(0, 0, 0);
+// Centreer het shirt horizontaal en zet het op romphoogte
+shirt.position.set(
+  -shirtCenter.x * scaleFactor,
+  bodySize.y * 0.68 - shirtCenter.y * scaleFactor,
+  -shirtCenter.z * scaleFactor
+);
 
 model.add(shirt);
 window.loadedShirt = shirt;
