@@ -1,1 +1,183 @@
 
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campaign RPG</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #10151b;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    #hud {
+      position: fixed;
+      z-index: 2;
+      top: 16px;
+      left: 16px;
+      padding: 14px 18px;
+      border: 1px solid #52616b;
+      border-radius: 12px;
+      background: #101820dd;
+      line-height: 1.7;
+    }
+    #hint { color: #b8d8c0; font-size: 13px; }
+    #error {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      color: #ffb4a9;
+      font-size: 13px;
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <strong>CAMPAIGN RPG</strong><br>
+    Gebied: <span id="area">1</span><br>
+    Speler: <span id="position">0, 0</span><br>
+    <span id="hint">Bewegen: WASD of pijltjestoetsen</span>
+  </div>
+  <div id="error"></div>
+
+  <script type="module">
+    import * as THREE from "three";
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x9bc5d9);
+    scene.fog = new THREE.Fog(0x9bc5d9, 25, 65);
+
+    const camera = new THREE.PerspectiveCamera(
+      65, innerWidth / innerHeight, 0.1, 1000
+    );
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x42513b, 2));
+
+    const sun = new THREE.DirectionalLight(0xffffff, 2.5);
+    sun.position.set(8, 15, 5);
+    sun.castShadow = true;
+    scene.add(sun);
+
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(100, 100),
+      new THREE.MeshStandardMaterial({ color: 0x477748 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    const grid = new THREE.GridHelper(60, 60, 0xc3d8a5, 0x688a5d);
+    grid.position.y = 0.015;
+    scene.add(grid);
+
+    // Tijdelijk spelersmodel; later vervangen we dit door je GLB.
+    const player = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.42, 0.8, 4, 8),
+      new THREE.MeshStandardMaterial({ color: 0x3978e8 })
+    );
+    body.position.y = 0.82;
+    body.castShadow = true;
+    player.add(body);
+
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(0.27, 12, 10),
+      new THREE.MeshStandardMaterial({ color: 0xe2bc96 })
+    );
+    head.position.y = 1.55;
+    head.castShadow = true;
+    player.add(head);
+    scene.add(player);
+
+    // Testobstakels; later vervangen door echte vijanden.
+    for (const [x, z] of [[4,-3], [-5,-7], [6,5], [-7,4]]) {
+      const rock = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(0.8),
+        new THREE.MeshStandardMaterial({ color: 0x686d75 })
+      );
+      rock.position.set(x, 0.65, z);
+      rock.castShadow = true;
+      scene.add(rock);
+    }
+
+    const keys = {};
+    addEventListener("keydown", e => {
+      keys[e.key.toLowerCase()] = true;
+      if (["arrowup","arrowdown","arrowleft","arrowright"," "]
+          .includes(e.key.toLowerCase())) e.preventDefault();
+    });
+    addEventListener("keyup", e => {
+      keys[e.key.toLowerCase()] = false;
+    });
+    addEventListener("blur", () => {
+      for (const key in keys) keys[key] = false;
+    });
+
+    const followOffset = new THREE.Vector3(0, 7, 9);
+    camera.position.copy(player.position).add(followOffset);
+    camera.lookAt(player.position);
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+
+      let x = 0, z = 0;
+      if (keys["w"] || keys["arrowup"]) z -= 1;
+      if (keys["s"] || keys["arrowdown"]) z += 1;
+      if (keys["a"] || keys["arrowleft"]) x -= 1;
+      if (keys["d"] || keys["arrowright"]) x += 1;
+
+      if (x !== 0 || z !== 0) {
+        const length = Math.hypot(x, z);
+        x /= length;
+        z /= length;
+        player.position.x += x * 5 * dt;
+        player.position.z += z * 5 * dt;
+        player.rotation.y = Math.atan2(x, z);
+      }
+
+      const target = player.position.clone().add(followOffset);
+      camera.position.lerp(target, 1 - Math.exp(-5 * dt));
+      camera.lookAt(
+        player.position.x,
+        player.position.y + 0.7,
+        player.position.z
+      );
+
+      document.getElementById("position").textContent =
+        `${player.position.x.toFixed(1)}, ${player.position.z.toFixed(1)}`;
+
+      renderer.render(scene, camera);
+    }
+
+    addEventListener("resize", () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    animate();
+  </script>
+</body>
+</html>
