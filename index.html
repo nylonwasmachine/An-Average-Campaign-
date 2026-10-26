@@ -732,10 +732,34 @@ try {
 
   const shirt = shirtGltf.scene;
 
-  // Het shirt gebruikt dezelfde schaal als het spelersmodel.
-  shirt.scale.copy(model.scale);
+// Bepaal de afmetingen van het lichaam en het shirt.
+const bodyBounds = new THREE.Box3().setFromObject(model);
+const shirtBounds = new THREE.Box3().setFromObject(shirt);
 
-  model.add(shirt);
+const bodySize = bodyBounds.getSize(new THREE.Vector3());
+const shirtSize = shirtBounds.getSize(new THREE.Vector3());
+
+// Maak het shirt kleiner als het groter is dan het lichaam.
+const scaleFactor = Math.min(
+  bodySize.x / shirtSize.x,
+  bodySize.y / shirtSize.y,
+  bodySize.z / shirtSize.z,
+  1
+);
+
+shirt.scale.setScalar(scaleFactor);
+
+// Zet het shirt op dezelfde middenpositie als het lichaam.
+const bodyCenter = bodyBounds.getCenter(new THREE.Vector3());
+const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
+
+shirt.position.set(
+  bodyCenter.x - shirtCenter.x * scaleFactor,
+  bodyCenter.y - shirtCenter.y * scaleFactor,
+  bodyCenter.z - shirtCenter.z * scaleFactor
+);
+
+model.add(shirt);
 window.loadedShirt = shirt;
 } catch (error) {
   console.error("Shirt kon niet worden geladen:", error);
