@@ -753,11 +753,7 @@ shirt.scale.setScalar(scaleFactor);
 const bodyCenter = bodyBounds.getCenter(new THREE.Vector3());
 const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
 
-shirt.position.set(
-  bodyCenter.x - shirtCenter.x * scaleFactor,
-  bodyCenter.y - shirtCenter.y * scaleFactor,
-  bodyCenter.z - shirtCenter.z * scaleFactor
-);
+shirt.position.set(0, 0, 0);
 
 model.add(shirt);
 window.loadedShirt = shirt;
