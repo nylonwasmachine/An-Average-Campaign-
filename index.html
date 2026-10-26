@@ -745,14 +745,8 @@ const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
 const targetWidth = bodySize.x * 0.48;
 const scaleFactor = targetWidth / shirtSize.x;
 
-shirt.scale.setScalar(scaleFactor);
-
-// Centreer het shirt horizontaal en zet het op romphoogte
-shirt.position.set(
-  -shirtCenter.x * scaleFactor,
-  bodySize.y * 0.68 - shirtCenter.y * scaleFactor,
-  -shirtCenter.z * scaleFactor
-);
+shirt.scale.setScalar(1);
+shirt.position.set(0, 0, 0);
 
 model.add(shirt);
 window.loadedShirt = shirt;
