@@ -581,14 +581,14 @@ showAppearanceControls();
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.prepend(renderer.domElement);
 
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x555044, 2));
+        scene.add(new THREE.HemisphereLight(0xffffff, 0xffffff, 2.5));
 
-        const keyLight = new THREE.DirectionalLight(0xffffff, 3);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2);
         keyLight.position.set(3, 6, 5);
         keyLight.castShadow = true;
         scene.add(keyLight);
 
-        const fillLight = new THREE.DirectionalLight(0xc5d5ff, 1.2);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 1.5);
         fillLight.position.set(-4, 2, -3);
         scene.add(fillLight);
 
@@ -645,20 +645,27 @@ showAppearanceControls();
       if (renderer && scene && camera) renderer.render(scene, camera);
     }
 
-    function applyModelColor(color) {
-      if (!loadedModel) return;
-      loadedModel.traverse(object => {
-        if (!object.isMesh || !object.material) return;
+    
+function applyModelColor(color) {
+  if (!loadedModel) return;
 
-        const materials = Array.isArray(object.material)
-          ? object.material : [object.material];
+  loadedModel.traverse(object => {
+    if (!object.isMesh || !object.material) return;
 
-        materials.forEach(material => {
-          material.color.set(color);
-          material.needsUpdate = true;
-        });
-      });
-    }
+    const materials = Array.isArray(object.material)
+      ? object.material : [object.material];
+
+    materials.forEach(material => {
+      material.color.set(color);
+
+      // Minder glans en een neutralere, gelijkmatigere weergave.
+      if ("roughness" in material) material.roughness = 0.9;
+      if ("metalness" in material) material.metalness = 0;
+
+      material.needsUpdate = true;
+    });
+  });
+}
 
     async function loadCharacter(modelType) {
       const version = ++loadVersion;
