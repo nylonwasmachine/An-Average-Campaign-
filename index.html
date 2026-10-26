@@ -117,68 +117,103 @@
       border: 1px solid #65583e;
     }
 
-    .creator-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr);
-      gap: 18px;
-    }
 
-    #preview {
-      position: relative;
-      min-height: 430px;
-      overflow: hidden;
-      border: 1px solid #665638;
-      border-radius: 12px;
-      background: radial-gradient(ellipse at 50% 35%, #34352f, #11120f 75%);
-    }
+.creator-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr);
+  gap: 20px;
+  align-items: start;
+}
 
-    #preview canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-height: 430px;
-      touch-action: none;
-    }
+.settings {
+  padding: 22px;
+  background: #1a1915;
+  border: 1px solid #50452f;
+  border-radius: 12px;
+  min-width: 0;
+}
 
-    #previewHint {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      color: #d5c9b2;
-      text-align: center;
-      font-size: 12px;
-      pointer-events: none;
-    }
+.settings h2, .settings h3 {
+  color: #e7c77f;
+}
 
-    .settings {
-      padding: 22px;
-      background: #1a1915;
-      border: 1px solid #50452f;
-      border-radius: 12px;
-    }
+.settings h3 {
+  margin: 22px 0 10px;
+}
 
-    .settings h2 { margin-top: 0; }
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
 
-    .color-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+.skin-swatch {
+  height: 34px;
+  width: 100%;
+  padding: 0;
+  border: 2px solid #514b3d;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
-    #skinColor {
-      width: 64px;
-      height: 44px;
-      padding: 3px;
-      cursor: pointer;
-    }
+.skin-swatch.active {
+  outline: 2px solid #e7c77f;
+  outline-offset: 2px;
+}
 
-    .small { font-size: 12px; }
+.custom-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 12px 0;
+}
 
-    @media (max-width: 700px) {
-      .creator-layout { grid-template-columns: 1fr; }
-      #preview, #preview canvas { min-height: 360px; }
-    }
+.custom-tab {
+  padding: 10px 6px;
+  color: #f5ead7;
+  background: #29271f;
+  border: 1px solid #504937;
+}
+
+.custom-tab.active {
+  border-color: #d7b56d;
+  background: #383124;
+}
+
+.custom-panel {
+  padding: 12px;
+  border: 1px solid #403a2d;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+#preview {
+  position: relative;
+  min-width: 0;
+  min-height: 560px;
+  overflow: hidden;
+  border: 1px solid #665638;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 35%, #34352f, #11120f 75%);
+}
+
+#preview canvas {
+  display: block;
+  width: 100%;
+  height: 560px;
+  touch-action: none;
+}
+
+@media (max-width: 700px) {
+  .creator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #preview, #preview canvas {
+    min-height: 360px;
+    height: 360px;
+  }
+}
   </style>
 </head>
 
@@ -228,37 +263,80 @@
       Kies je basispersonage en kleur. Je kunt het model slepen om het te draaien.
     </p>
 
-    <div class="creator-layout">
-      <section id="preview" aria-label="3D-personage">
-        <div id="previewHint">Sleep om je personage te draaien</div>
-      </section>
+    
+<div class="creator-layout">
+  <section class="settings">
+    <h2>Customize Character</h2>
 
-      <section class="settings">
-        <h2>Jouw personage</h2>
+    <label for="modelChoice">Character</label>
+    <select id="modelChoice">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
 
-        <label for="modelChoice">Model</label>
-        <select id="modelChoice">
-          <option value="male">Mannelijk</option>
-          <option value="female">Vrouwelijk</option>
-        </select>
+    <h3>Skin tone</h3>
+    <div id="skinSwatches" class="swatches"></div>
 
-        <label for="skinColor">Modelkleur</label>
-        <div class="color-row">
-          <input id="skinColor" type="color" value="#b9b9b9">
-          <span id="colorLabel">#b9b9b9</span>
-        </div>
-
-        <p class="muted small">
-          Je modellen hebben nog geen texturen. Daarom verandert deze kleur
-          voorlopig het hele model, niet alleen de huid.
-        </p>
-
-        <button id="save" class="primary" type="button">
-          PERSONAGE OPSLAAN
-        </button>
-        <p id="creatorMessage" role="status" aria-live="polite"></p>
-      </section>
+    <label for="skinColor">Custom skin color</label>
+    <div class="color-row">
+      <input id="skinColor" type="color" value="#b9b9b9">
+      <span id="colorLabel">#b9b9b9</span>
     </div>
+
+    <h3>Appearance editor</h3>
+    <div class="custom-tabs">
+      <button type="button" class="custom-tab active" data-panel="clothingPanel">Clothing</button>
+      <button type="button" class="custom-tab" data-panel="eyesPanel">Eyes</button>
+      <button type="button" class="custom-tab" data-panel="mouthPanel">Mouth</button>
+      <button type="button" class="custom-tab" data-panel="extraPanel">Other</button>
+    </div>
+
+    <div id="clothingPanel" class="custom-panel">
+      <label for="clothingColor">Clothing color</label>
+      <input id="clothingColor" type="color" value="#496a9c">
+      <p class="muted small">Clothing color selection — model separation required to apply it to clothing only.</p>
+    </div>
+
+    <div id="eyesPanel" class="custom-panel hidden">
+      <label for="eyeColor">Eye color</label>
+      <select id="eyeColor">
+        <option value="#4b3022">Brown</option>
+        <option value="#4169a1">Blue</option>
+        <option value="#47744c">Green</option>
+        <option value="#222222">Black</option>
+        <option value="#888888">Grey</option>
+      </select>
+    </div>
+
+    <div id="mouthPanel" class="custom-panel hidden">
+      <label for="mouthStyle">Mouth style</label>
+      <select id="mouthStyle">
+        <option value="default">Default</option>
+        <option value="smile">Smile</option>
+        <option value="serious">Serious</option>
+      </select>
+      <p class="muted small">The model needs separate facial features or blend shapes before this can change its appearance.</p>
+    </div>
+
+    <div id="extraPanel" class="custom-panel hidden">
+      <label for="hairColor">Hair color</label>
+      <input id="hairColor" type="color" value="#39281f">
+      <label for="accessory">Accessory</label>
+      <select id="accessory">
+        <option value="none">None</option>
+        <option value="crown">Crown (planned)</option>
+        <option value="glasses">Glasses (planned)</option>
+      </select>
+    </div>
+
+    <button id="save" class="primary" type="button">SAVE CHARACTER</button>
+    <p id="creatorMessage" role="status" aria-live="polite"></p>
+  </section>
+
+  <section id="preview" aria-label="3D character preview">
+    <div id="previewHint">Drag to rotate your character</div>
+  </section>
+</div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -281,6 +359,95 @@
     const modelChoice = document.getElementById("modelChoice");
     const skinColor = document.getElementById("skinColor");
     const colorLabel = document.getElementById("colorLabel");
+    
+const skinTones = [
+  "#F8E1D1", "#F1D0B1", "#E8B995", "#DDA47C", "#CF9169",
+  "#BC8059", "#A96D49", "#925A3C", "#7D4B32", "#693D2B",
+  "#573323", "#46291E", "#352019", "#281915", "#17110F"
+];
+
+let appearanceOptions = {
+  clothingColor: "#496a9c",
+  eyeColor: "#4b3022",
+  mouthStyle: "default",
+  hairColor: "#39281f",
+  accessory: "none"
+};
+
+function renderSkinSwatches() {
+  const container = document.getElementById("skinSwatches");
+  container.innerHTML = "";
+
+  skinTones.forEach(color => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "skin-swatch";
+    button.style.backgroundColor = color;
+    button.title = color;
+    button.setAttribute("aria-label", "Huidskleur " + color);
+
+    button.addEventListener("click", () => {
+      skinColor.value = color;
+      colorLabel.textContent = color;
+      applyModelColor(color);
+      updateActiveSwatch();
+    });
+
+    container.appendChild(button);
+  });
+
+  updateActiveSwatch();
+}
+
+function updateActiveSwatch() {
+  document.querySelectorAll(".skin-swatch").forEach(button => {
+    const active = button.title.toLowerCase() === skinColor.value.toLowerCase();
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+document.querySelectorAll(".custom-tab").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".custom-tab").forEach(tab => {
+      tab.classList.toggle("active", tab === button);
+    });
+
+    document.querySelectorAll(".custom-panel").forEach(panel => {
+      panel.classList.toggle("hidden", panel.id !== button.dataset.panel);
+    });
+  });
+});
+
+function readAppearanceControls() {
+  appearanceOptions = {
+    clothingColor: document.getElementById("clothingColor").value,
+    eyeColor: document.getElementById("eyeColor").value,
+    mouthStyle: document.getElementById("mouthStyle").value,
+    hairColor: document.getElementById("hairColor").value,
+    accessory: document.getElementById("accessory").value
+  };
+}
+
+function showAppearanceControls(options = {}) {
+  appearanceOptions = { ...appearanceOptions, ...options };
+
+  document.getElementById("clothingColor").value = appearanceOptions.clothingColor;
+  document.getElementById("eyeColor").value = appearanceOptions.eyeColor;
+  document.getElementById("mouthStyle").value = appearanceOptions.mouthStyle;
+  document.getElementById("hairColor").value = appearanceOptions.hairColor;
+  document.getElementById("accessory").value = appearanceOptions.accessory;
+}
+
+["clothingColor", "eyeColor", "mouthStyle", "hairColor", "accessory"]
+  .forEach(id => {
+    document.getElementById(id).addEventListener("change", readAppearanceControls);
+    document.getElementById(id).addEventListener("input", readAppearanceControls);
+  });
+
+renderSkinSwatches();
+showAppearanceControls();
+
 
     let mode = "login";
     let currentUser = null;
@@ -330,6 +497,7 @@
       }
 
       currentProfile = data;
+      showAppearanceControls(data.appearance_options || {});
       modelChoice.value = data.character_model === "female" ? "female" : "male";
       skinColor.value = /^#[0-9a-fA-F]{6}$/.test(data.skin_color)
         ? data.skin_color : "#b9b9b9";
@@ -561,10 +729,11 @@
       loadCharacter(modelChoice.value);
     });
 
-    skinColor.addEventListener("input", () => {
-      colorLabel.textContent = skinColor.value;
-      applyModelColor(skinColor.value);
-    });
+  skinColor.addEventListener("input", () => {
+  colorLabel.textContent = skinColor.value;
+  applyModelColor(skinColor.value);
+  updateActiveSwatch();
+});
 
     document.getElementById("save").addEventListener("click", async () => {
       if (!currentUser) return;
@@ -574,10 +743,13 @@
       creatorMessage.textContent = "Opslaan...";
 
       try {
-        const newChoices = {
-          character_model: modelChoice.value,
-          skin_color: skinColor.value
-        };
+        readAppearanceControls();
+
+const newChoices = {
+  character_model: modelChoice.value,
+  skin_color: skinColor.value,
+  appearance_options: appearanceOptions
+};
 
         const { error } = await db
           .from("profiles")
