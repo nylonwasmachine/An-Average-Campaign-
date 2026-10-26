@@ -502,7 +502,9 @@
       }
 
       const loader = new GLTFLoader();
-      const path = "./models/" + modelType + ".glb";
+      const path = modelType === "female"
+  ? "./models/femal.glb"
+  : "./models/male.glb";
 
       try {
         const gltf = await loader.loadAsync(path);
