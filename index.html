@@ -735,12 +735,8 @@ try {
   // Het shirt gebruikt dezelfde schaal als het spelersmodel.
   shirt.scale.copy(model.scale);
 
-  // Begin met dezelfde positie en rotatie als het spelersmodel.
-  shirt.position.copy(model.position);
-  shirt.rotation.copy(model.rotation);
-
-  modelRoot.add(shirt);
-  window.loadedShirt = shirt;
+  model.add(shirt);
+window.loadedShirt = shirt;
 } catch (error) {
   console.error("Shirt kon niet worden geladen:", error);
 }
