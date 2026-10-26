@@ -1,193 +1,302 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Realmfall — RPG</title>
+  <title>Realmfall — Character Creator</title>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+
   <style>
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
       color: #f5ead7;
-      background:
-        radial-gradient(ellipse at top, #423323 0%, #191711 48%, #0b0c0d 100%);
-      font-family: Georgia, serif;
+      background: #10100f;
+      font-family: Arial, sans-serif;
     }
+
+    button, input, select { font: inherit; }
+
+    button {
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    button:disabled { opacity: .55; cursor: wait; }
+
+    .hidden { display: none !important; }
 
     .panel {
-      width: min(100%, 440px);
-      padding: 32px;
-      background: #171713;
-      border: 1px solid #806b43;
+      width: min(100% - 32px, 440px);
+      margin: 7vh auto;
+      padding: 28px;
+      background: #1a1915;
+      border: 1px solid #75603c;
       border-radius: 12px;
-      box-shadow: 0 20px 70px #0009;
     }
 
-    h1 {
-      margin: 0;
-      color: #e7c77f;
-      text-align: center;
-      letter-spacing: 4px;
-      font-size: 30px;
-    }
-
-    .subtitle {
-      margin: 10px 0 26px;
-      color: #b5a98f;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .tabs { display: flex; gap: 8px; margin-bottom: 22px; }
-
-    button, input { font: inherit; }
-
-    .tabs button {
-      flex: 1;
-      padding: 11px 6px;
-      color: #c9bda6;
-      background: #25241e;
-      border: 1px solid #494333;
-      cursor: pointer;
-    }
-
-    .tabs button.active {
-      color: #ffe4a4;
-      border-color: #c7a45e;
-      background: #393020;
-    }
+    h1, h2 { color: #e7c77f; }
+    h1 { text-align: center; letter-spacing: 3px; }
+    .muted { color: #b5aa95; line-height: 1.5; }
 
     label {
       display: block;
-      margin: 14px 0 7px;
-      color: #e2d5bd;
+      margin: 16px 0 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      color: white;
+      background: #10100f;
+      border: 1px solid #504937;
+      border-radius: 6px;
+    }
+
+    .primary {
+      width: 100%;
+      padding: 13px;
+      margin-top: 18px;
+      color: #20180b;
+      background: #d7b56d;
+      border: 0;
+      font-weight: bold;
+    }
+
+    .tabs { display: flex; gap: 8px; margin: 20px 0; }
+    .tabs button {
+      flex: 1;
+      padding: 11px 5px;
+      color: #e5d9c4;
+      background: #29271f;
+      border: 1px solid #504937;
+    }
+    .tabs button.active { border-color: #d7b56d; }
+
+    #message, #creatorMessage {
+      min-height: 24px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      color: #e7c77f;
       font-size: 14px;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #4d493c;
-      border-radius: 5px;
-      color: white;
-      background: #0d0e0c;
-      outline: none;
+    #creator {
+      width: min(100% - 24px, 1100px);
+      margin: 24px auto;
     }
 
-    input:focus { border-color: #c7a45e; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
 
-    .submit {
+    .topbar h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .secondary {
+      padding: 10px 14px;
+      color: #f5ead7;
+      background: #29271f;
+      border: 1px solid #65583e;
+    }
+
+    .creator-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr);
+      gap: 18px;
+    }
+
+    #preview {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      border: 1px solid #665638;
+      border-radius: 12px;
+      background: radial-gradient(ellipse at 50% 35%, #34352f, #11120f 75%);
+    }
+
+    #preview canvas {
+      display: block;
       width: 100%;
-      margin-top: 22px;
-      padding: 13px;
-      color: #21190c;
-      background: #d7b56d;
-      border: 0;
-      border-radius: 5px;
-      font-weight: bold;
+      height: 100%;
+      min-height: 430px;
+      touch-action: none;
+    }
+
+    #previewHint {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      color: #d5c9b2;
+      text-align: center;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    .settings {
+      padding: 22px;
+      background: #1a1915;
+      border: 1px solid #50452f;
+      border-radius: 12px;
+    }
+
+    .settings h2 { margin-top: 0; }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #skinColor {
+      width: 64px;
+      height: 44px;
+      padding: 3px;
       cursor: pointer;
     }
 
-    button:disabled { opacity: .6; cursor: wait; }
+    .small { font-size: 12px; }
 
-    #message {
-      min-height: 40px;
-      margin: 16px 0 0;
-      color: #e8cb91;
-      font-size: 14px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    #game { text-align: center; }
-    #game h2 { color: #e7c77f; }
-    .hidden { display: none !important; }
-
-    .note {
-      color: #aaa18d;
-      font: 12px/1.5 Arial, sans-serif;
-      margin-top: 18px;
+    @media (max-width: 700px) {
+      .creator-layout { grid-template-columns: 1fr; }
+      #preview, #preview canvas { min-height: 360px; }
     }
   </style>
 </head>
-<body>
-  <main class="panel">
-    <section id="auth">
-      <h1>REALMFALL</h1>
-      <p class="subtitle">Your legend begins here.</p>
 
-      <div class="tabs">
-        <button id="loginTab" class="active" type="button">INLOGGEN</button>
-        <button id="signupTab" type="button">ACCOUNT MAKEN</button>
+<body>
+  <main id="auth" class="panel">
+    <h1>REALMFALL</h1>
+    <p class="muted" style="text-align:center">
+      Your legend begins here.
+    </p>
+
+    <div class="tabs">
+      <button id="loginTab" class="active" type="button">INLOGGEN</button>
+      <button id="signupTab" type="button">ACCOUNT MAKEN</button>
+    </div>
+
+    <form id="authForm">
+      <div id="usernameField" class="hidden">
+        <label for="username">Gebruikersnaam</label>
+        <input id="username" minlength="3" maxlength="20"
+          pattern="[A-Za-z0-9_-]{3,20}" autocomplete="username"
+          placeholder="Bijv. ShadowKnight">
       </div>
 
-      <form id="authForm">
-        <div id="usernameField" class="hidden">
-          <label for="username">Gebruikersnaam</label>
-          <input id="username" minlength="3" maxlength="20"
-            pattern="[A-Za-z0-9_-]{3,20}"
-            autocomplete="username"
-            placeholder="Bijv. ShadowKnight">
-          <p class="note">3–20 tekens: letters, cijfers, _ of -</p>
+      <label for="email">E-mailadres</label>
+      <input id="email" type="email" required autocomplete="email">
+
+      <label for="password">Wachtwoord</label>
+      <input id="password" type="password" required minlength="8"
+        autocomplete="current-password">
+
+      <button id="submit" class="primary" type="submit">INLOGGEN</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <main id="creator" class="hidden">
+    <header class="topbar">
+      <h1>REALMFALL</h1>
+      <div>
+        <span id="welcome"></span>
+        <button id="logout" class="secondary" type="button">Uitloggen</button>
+      </div>
+    </header>
+
+    <h2>Character Creator</h2>
+    <p class="muted">
+      Kies je basispersonage en kleur. Je kunt het model slepen om het te draaien.
+    </p>
+
+    <div class="creator-layout">
+      <section id="preview" aria-label="3D-personage">
+        <div id="previewHint">Sleep om je personage te draaien</div>
+      </section>
+
+      <section class="settings">
+        <h2>Jouw personage</h2>
+
+        <label for="modelChoice">Model</label>
+        <select id="modelChoice">
+          <option value="male">Mannelijk</option>
+          <option value="female">Vrouwelijk</option>
+        </select>
+
+        <label for="skinColor">Modelkleur</label>
+        <div class="color-row">
+          <input id="skinColor" type="color" value="#b9b9b9">
+          <span id="colorLabel">#b9b9b9</span>
         </div>
 
-        <label for="email">E-mailadres</label>
-        <input id="email" type="email" required
-          autocomplete="email" placeholder="jij@voorbeeld.nl">
+        <p class="muted small">
+          Je modellen hebben nog geen texturen. Daarom verandert deze kleur
+          voorlopig het hele model, niet alleen de huid.
+        </p>
 
-        <label for="password">Wachtwoord</label>
-        <input id="password" type="password" required
-          minlength="8" autocomplete="current-password"
-          placeholder="Minimaal 8 tekens">
-
-        <button id="submit" class="submit" type="submit">
-          INLOGGEN
+        <button id="save" class="primary" type="button">
+          PERSONAGE OPSLAAN
         </button>
-      </form>
-
-      <p id="message" role="status" aria-live="polite"></p>
-    </section>
-
-    <section id="game" class="hidden">
-      <h1>REALMFALL</h1>
-      <h2>Welkom, <span id="playerName"></span>!</h2>
-      <p>Je account werkt. Jouw avontuur begint binnenkort.</p>
-      <p class="note">
-        Volgende stap: je 3D-personage en de sociale bar-lobby.
-      </p>
-      <button id="logout" class="submit" type="button">UITLOGGEN</button>
-      <p id="gameMessage" role="status"></p>
-    </section>
+        <p id="creatorMessage" role="status" aria-live="polite"></p>
+      </section>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
-    const SUPABASE_URL = "https://jpfafbpeexjdljebhzzo.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_vRMUoWgWM_5WOtjysEhWZQ_xni9HEiV";
 
-    const { createClient } = window.supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-    const auth = document.getElementById("auth");
-    const game = document.getElementById("game");
-    const form = document.getElementById("authForm");
+    // Vul hier je eigen gegevens uit Supabase in.
+    const SUPABASE_URL = "VUL_HIER_JE_PROJECT_URL_IN";
+    const SUPABASE_KEY = "VUL_HIER_JE_PUBLISHABLE_KEY_IN";
+
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const authScreen = document.getElementById("auth");
+    const creatorScreen = document.getElementById("creator");
     const message = document.getElementById("message");
-    const usernameField = document.getElementById("usernameField");
-    const usernameInput = document.getElementById("username");
+    const creatorMessage = document.getElementById("creatorMessage");
     const submit = document.getElementById("submit");
+    const modelChoice = document.getElementById("modelChoice");
+    const skinColor = document.getElementById("skinColor");
+    const colorLabel = document.getElementById("colorLabel");
+
     let mode = "login";
+    let currentUser = null;
+    let currentProfile = null;
+    let scene, camera, renderer, modelRoot;
+    let loadedModel = null;
+    let loadVersion = 0;
+    let frameId = null;
+    let dragging = false;
+    let lastPointerX = 0;
 
     function setMode(nextMode) {
       mode = nextMode;
       const signingUp = mode === "signup";
-      usernameField.classList.toggle("hidden", !signingUp);
-      usernameInput.required = signingUp;
+      document.getElementById("usernameField").classList.toggle("hidden", !signingUp);
+      document.getElementById("username").required = signingUp;
       document.getElementById("loginTab").classList.toggle("active", !signingUp);
       document.getElementById("signupTab").classList.toggle("active", signingUp);
       submit.textContent = signingUp ? "ACCOUNT AANMAKEN" : "INLOGGEN";
@@ -199,72 +308,288 @@
     document.getElementById("loginTab").onclick = () => setMode("login");
     document.getElementById("signupTab").onclick = () => setMode("signup");
 
-    async function showProfile(user) {
+    function showAuth(text = "") {
+      authScreen.classList.remove("hidden");
+      creatorScreen.classList.add("hidden");
+      message.textContent = text;
+    }
+
+    async function openCreator(user) {
+      currentUser = user;
       const { data, error } = await db
         .from("profiles")
-        .select("username")
+        .select("username, character_model, skin_color")
         .eq("id", user.id)
         .single();
 
       if (error) {
-        throw new Error("Je bent ingelogd, maar je profiel kon niet worden geladen. Controleer de SQL-trigger en profieltabel.");
+        throw new Error(
+          "Je bent ingelogd, maar je profiel kon niet worden geladen. Controleer of de SQL voor de nieuwe profielkolommen is uitgevoerd. " +
+          error.message
+        );
       }
 
-      document.getElementById("playerName").textContent = data.username;
-      auth.classList.add("hidden");
-      game.classList.remove("hidden");
+      currentProfile = data;
+      modelChoice.value = data.character_model === "female" ? "female" : "male";
+      skinColor.value = /^#[0-9a-fA-F]{6}$/.test(data.skin_color)
+        ? data.skin_color : "#b9b9b9";
+      colorLabel.textContent = skinColor.value;
+
+      document.getElementById("welcome").textContent =
+        "Welkom, " + data.username + "  ";
+
+      authScreen.classList.add("hidden");
+      creatorScreen.classList.remove("hidden");
+
+      // De renderer wordt pas gemaakt als de preview zichtbaar is.
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      setup3D();
+      await loadCharacter(modelChoice.value);
     }
 
-    form.addEventListener("submit", async (event) => {
+    document.getElementById("authForm").addEventListener("submit", async event => {
       event.preventDefault();
       message.textContent = "";
       submit.disabled = true;
 
       try {
+        if (SUPABASE_URL.includes("VUL_HIER") ||
+            SUPABASE_KEY.includes("VUL_HIER")) {
+          throw new Error("Vul eerst je Supabase Project URL en Publishable Key in.");
+        }
+
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
 
-        if (SUPABASE_URL.includes("VUL_HIER") ||
-            SUPABASE_KEY.includes("VUL_HIER")) {
-          throw new Error("Vul eerst je Supabase Project URL en Publishable Key in de code in.");
-        }
-
         if (mode === "signup") {
-          const username = usernameInput.value.trim();
+          const username = document.getElementById("username").value.trim();
 
           if (!/^[A-Za-z0-9_-]{3,20}$/.test(username)) {
-            throw new Error("Gebruik 3–20 letters, cijfers, _ of - voor je gebruikersnaam.");
+            throw new Error("Gebruikersnamen moeten 3–20 letters, cijfers, _ of - bevatten.");
           }
 
           const { data, error } = await db.auth.signUp({
             email,
             password,
-            options: {
-              data: { username }
-            }
+            options: { data: { username } }
           });
 
           if (error) throw error;
 
           if (data.session) {
-            await showProfile(data.user);
+            await openCreator(data.user);
           } else {
             message.textContent =
-              "Account aangemaakt! Controleer je e-mail om je account te bevestigen en log daarna in.";
+              "Account aangemaakt! Bevestig je e-mailadres via de mail en log daarna in.";
           }
         } else {
           const { data, error } = await db.auth.signInWithPassword({
-            email,
-            password
+            email, password
           });
 
           if (error) throw error;
-          await showProfile(data.user);
+          await openCreator(data.user);
         }
       } catch (error) {
         message.textContent = error.message || "Er ging iets mis.";
       } finally {
         submit.disabled = false;
+      }
+    });
+
+    function setup3D() {
+      const container = document.getElementById("preview");
+
+      if (!renderer) {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color("#22251f");
+
+        camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+        camera.position.set(0, 1.5, 5.5);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.prepend(renderer.domElement);
+
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x555044, 2));
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 3);
+        keyLight.position.set(3, 6, 5);
+        keyLight.castShadow = true;
+        scene.add(keyLight);
+
+        const fillLight = new THREE.DirectionalLight(0xc5d5ff, 1.2);
+        fillLight.position.set(-4, 2, -3);
+        scene.add(fillLight);
+
+        const floor = new THREE.Mesh(
+          new THREE.CircleGeometry(2.2, 48),
+          new THREE.MeshStandardMaterial({ color: "#45443b", roughness: 0.9 })
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -0.02;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        modelRoot = new THREE.Group();
+        scene.add(modelRoot);
+
+        container.addEventListener("pointerdown", event => {
+          dragging = true;
+          lastPointerX = event.clientX;
+          container.setPointerCapture(event.pointerId);
+        });
+
+        container.addEventListener("pointermove", event => {
+          if (!dragging || !loadedModel) return;
+          const delta = event.clientX - lastPointerX;
+          loadedModel.rotation.y += delta * 0.01;
+          lastPointerX = event.clientX;
+        });
+
+        const stopDrag = () => dragging = false;
+        container.addEventListener("pointerup", stopDrag);
+        container.addEventListener("pointercancel", stopDrag);
+
+        window.addEventListener("resize", resize3D);
+        resize3D();
+        animate();
+      } else {
+        resize3D();
+      }
+    }
+
+    function resize3D() {
+      if (!renderer || !camera) return;
+      const container = document.getElementById("preview");
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      if (!width || !height) return;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      frameId = requestAnimationFrame(animate);
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    function applyModelColor(color) {
+      if (!loadedModel) return;
+      loadedModel.traverse(object => {
+        if (!object.isMesh || !object.material) return;
+
+        const materials = Array.isArray(object.material)
+          ? object.material : [object.material];
+
+        materials.forEach(material => {
+          material.color.set(color);
+          material.needsUpdate = true;
+        });
+      });
+    }
+
+    async function loadCharacter(modelType) {
+      const version = ++loadVersion;
+      creatorMessage.textContent = "Model laden...";
+
+      if (loadedModel) {
+        modelRoot.remove(loadedModel);
+        loadedModel = null;
+      }
+
+      const loader = new GLTFLoader();
+      const path = "./models/" + modelType + ".glb";
+
+      try {
+        const gltf = await loader.loadAsync(path);
+        if (version !== loadVersion) return;
+
+        const model = gltf.scene;
+
+        // Centreer het model en schaal het naar een bruikbare hoogte.
+        let bounds = new THREE.Box3().setFromObject(model);
+        const size = bounds.getSize(new THREE.Vector3());
+
+        if (!Number.isFinite(size.y) || size.y <= 0) {
+          throw new Error("Het GLB-bestand bevat geen bruikbaar 3D-model.");
+        }
+
+        const scale = 2.5 / size.y;
+        model.scale.setScalar(scale);
+
+        bounds = new THREE.Box3().setFromObject(model);
+        const center = bounds.getCenter(new THREE.Vector3());
+        model.position.x -= center.x;
+        model.position.y -= bounds.min.y;
+        model.position.z -= center.z;
+
+        model.traverse(object => {
+          if (!object.isMesh) return;
+          object.castShadow = true;
+          object.receiveShadow = true;
+
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material = object.material.map(material => material.clone());
+            } else {
+              object.material = object.material.clone();
+            }
+          }
+        });
+
+        loadedModel = model;
+        modelRoot.add(model);
+        applyModelColor(skinColor.value);
+        camera.position.set(0, 1.4, 5.5);
+        camera.lookAt(0, 1.2, 0);
+        creatorMessage.textContent = "Model geladen!";
+      } catch (error) {
+        if (version !== loadVersion) return;
+        creatorMessage.textContent =
+          "Model kon niet worden geladen: " + error.message +
+          ". Controleer of models/" + modelType + ".glb bestaat.";
+      }
+    }
+
+    modelChoice.addEventListener("change", () => {
+      loadCharacter(modelChoice.value);
+    });
+
+    skinColor.addEventListener("input", () => {
+      colorLabel.textContent = skinColor.value;
+      applyModelColor(skinColor.value);
+    });
+
+    document.getElementById("save").addEventListener("click", async () => {
+      if (!currentUser) return;
+
+      const saveButton = document.getElementById("save");
+      saveButton.disabled = true;
+      creatorMessage.textContent = "Opslaan...";
+
+      try {
+        const newChoices = {
+          character_model: modelChoice.value,
+          skin_color: skinColor.value
+        };
+
+        const { error } = await db
+          .from("profiles")
+          .update(newChoices)
+          .eq("id", currentUser.id);
+
+        if (error) throw error;
+
+        currentProfile = { ...currentProfile, ...newChoices };
+        creatorMessage.textContent = "Je personage is opgeslagen!";
+      } catch (error) {
+        creatorMessage.textContent = "Opslaan mislukt: " + error.message;
+      } finally {
+        saveButton.disabled = false;
       }
     });
 
@@ -275,25 +600,25 @@
       button.disabled = false;
 
       if (error) {
-        document.getElementById("gameMessage").textContent = error.message;
+        creatorMessage.textContent = "Uitloggen mislukt: " + error.message;
         return;
       }
 
-      game.classList.add("hidden");
-      auth.classList.remove("hidden");
-      message.textContent = "Je bent uitgelogd.";
+      currentUser = null;
+      currentProfile = null;
+      showAuth("Je bent uitgelogd.");
     });
 
     async function restoreSession() {
-      const { data, error } = await db.auth.getSession();
-      if (error || !data.session) return;
-
       try {
-        await showProfile(data.session.user);
-      } catch (err) {
-        message.textContent = err.message;
-        auth.classList.remove("hidden");
-        game.classList.add("hidden");
+        if (SUPABASE_URL.includes("VUL_HIER") ||
+            SUPABASE_KEY.includes("VUL_HIER")) return;
+
+        const { data, error } = await db.auth.getSession();
+        if (error) throw error;
+        if (data.session) await openCreator(data.session.user);
+      } catch (error) {
+        showAuth(error.message || "Je sessie kon niet worden hersteld.");
       }
     }
 
