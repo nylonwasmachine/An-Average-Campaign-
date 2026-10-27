@@ -788,47 +788,38 @@ function applyModelColor(color) {
 
     async function loadCharacter(modelType, className = selectedClass) {
       const version = ++loadVersion;
-      creatorMessage.textContent = "Model laden...";
+      const skinMessage = document.getElementById("skinMessage");
+      creatorMessage.textContent = "Classmodel zoeken...";
+      if (skinMessage) skinMessage.textContent = "Classmodel zoeken...";
 
-      if (loadedModel) {
+      if (loadedModel && modelRoot) {
         modelRoot.remove(loadedModel);
         loadedModel = null;
       }
 
-      const loader = new GLTFLoader();
-      const basePath = modelType === "female" ? "./models/female.glb" : "./models/male.glb";
+      // BELANGRIJK: geen oude male.glb/female.glb en geen los shirt als fallback.
+      // Alleen een model dat bij de gekozen class + gender hoort mag worden geladen.
       const classPath = CLASS_MODEL_PATHS[className]?.[modelType];
-      let usedPath = basePath;
+      if (!className || !classPath) {
+        const message = "Kies eerst een class om het bijbehorende model te laden.";
+        creatorMessage.textContent = message;
+        if (skinMessage) skinMessage.textContent = message;
+        return;
+      }
 
       try {
-        let gltf;
-        // Eerst het model voor de gekozen class proberen. Als dat bestand nog niet bestaat,
-        // gebruik dan het bestaande male.glb/female.glb-model als tijdelijke fallback.
-        if (classPath) {
-          try {
-            gltf = await loader.loadAsync(classPath);
-            usedPath = classPath;
-          } catch (_) {
-            gltf = await loader.loadAsync(basePath);
-          }
-        } else {
-          gltf = await loader.loadAsync(basePath);
-        }
+        const loader = new GLTFLoader();
+        const gltf = await loader.loadAsync(classPath);
         if (version !== loadVersion) return;
 
         const model = gltf.scene;
-
-        // Centreer het model en schaal het naar een bruikbare hoogte.
         let bounds = new THREE.Box3().setFromObject(model);
         const size = bounds.getSize(new THREE.Vector3());
-
         if (!Number.isFinite(size.y) || size.y <= 0) {
-          throw new Error("Het GLB-bestand bevat geen bruikbaar 3D-model.");
+          throw new Error("Dit classmodel bevat geen bruikbaar 3D-model.");
         }
 
-        const scale = 2.5 / size.y;
-        model.scale.setScalar(scale);
-
+        model.scale.setScalar(2.5 / size.y);
         bounds = new THREE.Box3().setFromObject(model);
         const center = bounds.getCenter(new THREE.Vector3());
         model.position.x -= center.x;
@@ -839,65 +830,23 @@ function applyModelColor(color) {
           if (!object.isMesh) return;
           object.castShadow = true;
           object.receiveShadow = true;
-
-          if (object.material) {
-            if (Array.isArray(object.material)) {
-              object.material = object.material.map(material => material.clone());
-            } else {
-              object.material = object.material.clone();
-            }
-          }
         });
 
         loadedModel = model;
-modelRoot.add(model);
-
-// Laad het losse shirt boven op het spelersmodel.
-try {
-  const shirtGltf = await loader.loadAsync("models/navy_shirt.glb");
-
-  if (version !== loadVersion) {
-    modelRoot.remove(model);
-    return;
-  }
-
-const shirt = shirtGltf.scene;
-
-// Afmetingen van het spelersmodel
-const bodyBounds = new THREE.Box3().setFromObject(model);
-const bodySize = bodyBounds.getSize(new THREE.Vector3());
-
-// Afmetingen van het shirt voordat het aan het lichaam hangt
-const shirtBounds = new THREE.Box3().setFromObject(shirt);
-const shirtSize = shirtBounds.getSize(new THREE.Vector3());
-const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
-
-// Schaal het shirt ten opzichte van de breedte van de romp
-const targetWidth = bodySize.x * 0.48;
-const scaleFactor = targetWidth / shirtSize.x;
-
-shirt.scale.setScalar(1);
-shirt.position.set(0, 0, 0);
-
-model.add(shirt);
-window.loadedShirt = shirt;
-} catch (error) {
-  console.error("Shirt kon niet worden geladen:", error);
-}
-
-applyModelColor(skinColor.value);
+        modelRoot.add(model);
         camera.position.set(0, 1.4, 5.5);
         camera.lookAt(0, 1.2, 0);
-        creatorMessage.textContent = usedPath === classPath && classPath
-          ? "Classmodel geladen: " + className + " (" + modelType + ")."
-          : "Basismodel geladen. Voeg voor " + className + " een classmodel toe om het uiterlijk te veranderen.";
-        document.getElementById("skinMessage").textContent = creatorMessage.textContent;
+        const message = "Classmodel geladen: " + className + " (" + modelType + ").";
+        creatorMessage.textContent = message;
+        if (skinMessage) skinMessage.textContent = message;
       } catch (error) {
         if (version !== loadVersion) return;
-        creatorMessage.textContent =
-          "Model kon niet worden geladen: " + error.message +
-          ". Controleer of models/" + modelType + ".glb bestaat.";
-        document.getElementById("skinMessage").textContent = creatorMessage.textContent;
+        // Een ontbrekend classmodel blijft bewust leeg; nooit terugvallen op oude modellen.
+        const message = "Nog geen modelbestand voor " + className + " (" + modelType + "). " +
+          "Plaats het later in: " + classPath;
+        creatorMessage.textContent = message;
+        if (skinMessage) skinMessage.textContent = message;
+        console.info(message, error);
       }
     }
 
