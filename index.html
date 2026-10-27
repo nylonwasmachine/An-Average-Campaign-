@@ -26,8 +26,14 @@
     }
 
     button, input, select { font: inherit; }
-    button { cursor: pointer; border-radius: 6px; }
+
+    button {
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
     button:disabled { opacity: .55; cursor: wait; }
+
     .hidden { display: none !important; }
 
     .panel {
@@ -43,7 +49,10 @@
     h1 { text-align: center; letter-spacing: 3px; }
     .muted { color: #b5aa95; line-height: 1.5; }
 
-    label { display: block; margin: 16px 0 7px; }
+    label {
+      display: block;
+      margin: 16px 0 7px;
+    }
 
     input, select {
       width: 100%;
@@ -65,7 +74,6 @@
     }
 
     .tabs { display: flex; gap: 8px; margin: 20px 0; }
-
     .tabs button {
       flex: 1;
       padding: 11px 5px;
@@ -73,7 +81,6 @@
       background: #29271f;
       border: 1px solid #504937;
     }
-
     .tabs button.active { border-color: #d7b56d; }
 
     #message, #creatorMessage {
@@ -98,7 +105,10 @@
       margin-bottom: 18px;
     }
 
-    .topbar h1 { margin: 0; font-size: 25px; }
+    .topbar h1 {
+      margin: 0;
+      font-size: 25px;
+    }
 
     .secondary {
       padding: 10px 14px;
@@ -107,141 +117,123 @@
       border: 1px solid #65583e;
     }
 
-    .creator-layout {
-      display: grid;
-      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr);
-      gap: 20px;
-      align-items: start;
-    }
 
-    .settings {
-      padding: 22px;
-      background: #1a1915;
-      border: 1px solid #50452f;
-      border-radius: 12px;
-      min-width: 0;
-    }
+.creator-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr);
+  gap: 20px;
+  align-items: start;
+}
 
-    .settings h2, .settings h3 { color: #e7c77f; }
-    .settings h3 { margin: 22px 0 10px; }
+.settings {
+  padding: 22px;
+  background: #1a1915;
+  border: 1px solid #50452f;
+  border-radius: 12px;
+  min-width: 0;
+}
 
-    .swatches {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 7px;
-    }
+.settings h2, .settings h3 {
+  color: #e7c77f;
+}
 
-    .skin-swatch {
-      height: 34px;
-      width: 100%;
-      padding: 0;
-      border: 2px solid #514b3d;
-      border-radius: 4px;
-    }
+.settings h3 {
+  margin: 22px 0 10px;
+}
 
-    .skin-swatch.active {
-      outline: 2px solid #e7c77f;
-      outline-offset: 2px;
-    }
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
 
-    .custom-tabs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 7px;
-      margin: 12px 0;
-    }
+.skin-swatch {
+  height: 34px;
+  width: 100%;
+  padding: 0;
+  border: 2px solid #514b3d;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
-    .custom-tab {
-      padding: 10px 6px;
-      color: #f5ead7;
-      background: #29271f;
-      border: 1px solid #504937;
-    }
+.skin-swatch.active {
+  outline: 2px solid #e7c77f;
+  outline-offset: 2px;
+}
 
-    .custom-tab.active {
-      border-color: #d7b56d;
-      background: #383124;
-    }
+.custom-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 12px 0;
+}
 
-    .custom-panel {
-      padding: 12px;
-      border: 1px solid #403a2d;
-      border-radius: 8px;
-      margin-bottom: 12px;
-    }
+.custom-tab {
+  padding: 10px 6px;
+  color: #f5ead7;
+  background: #29271f;
+  border: 1px solid #504937;
+}
 
-    #preview {
-      position: relative;
-      min-width: 0;
-      min-height: 560px;
-      overflow: hidden;
-      border: 1px solid #665638;
-      border-radius: 12px;
-      background: radial-gradient(ellipse at 50% 35%, #34352f, #11120f 75%);
-    }
+.custom-tab.active {
+  border-color: #d7b56d;
+  background: #383124;
+}
 
-    #preview canvas {
-      display: block;
-      width: 100%;
-      height: 560px;
-      touch-action: none;
-    }
+.custom-panel {
+  padding: 12px;
+  border: 1px solid #403a2d;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
 
-    @media (max-width: 700px) {
-      .creator-layout { grid-template-columns: 1fr; }
-      #preview, #preview canvas {
-        min-height: 360px;
-        height: 360px;
-      }
-    }
+#preview {
+  position: relative;
+  min-width: 0;
+  min-height: 560px;
+  overflow: hidden;
+  border: 1px solid #665638;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 35%, #34352f, #11120f 75%);
+}
+
+#preview canvas {
+  display: block;
+  width: 100%;
+  height: 560px;
+  touch-action: none;
+}
+
+@media (max-width: 700px) {
+  .creator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #preview, #preview canvas {
+    min-height: 360px;
+    height: 360px;
+  }
+}
 
     .menu-screen { max-width: 560px; }
-
     .menu-button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      color: #f5ead7;
-      background: #29271f;
-      border: 1px solid #504937;
+      display: block; width: 100%; padding: 12px; margin-top: 10px;
+      color: #f5ead7; background: #29271f; border: 1px solid #504937;
     }
-
     .menu-button:hover, .class-option:hover { border-color: #d7b56d; }
-
     .class-options, .gender-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-      gap: 10px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 10px;
       margin: 18px 0;
     }
-
     .class-option {
-      min-height: 94px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      font-size: 25px;
-      color: #f5ead7;
-      background: #29271f;
-      border: 1px solid #504937;
+      min-height: 94px; padding: 12px; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; gap: 8px; font-size: 25px;
+      color: #f5ead7; background: #29271f; border: 1px solid #504937;
     }
-
     .class-option span { font-size: 14px; }
+    .class-option.active { border: 2px solid #d7b56d; background: #393020; }
+    #menuMessage, #classMessage, #skinMessage { min-height: 24px; color: #e7c77f; font-size: 14px; }
 
-    .class-option.active {
-      border: 2px solid #d7b56d;
-      background: #393020;
-    }
-
-    #menuMessage, #classMessage, #skinMessage {
-      min-height: 24px;
-      color: #e7c77f;
-      font-size: 14px;
-    }
   </style>
 </head>
 
@@ -292,7 +284,6 @@
   <main id="classesScreen" class="panel hidden menu-screen">
     <h1>CLASSES</h1>
     <p class="muted">Kies de class waarmee je wilt spelen.</p>
-
     <div class="class-options">
       <button class="class-option" data-class="Ranger" type="button">🏹<span>Ranger</span></button>
       <button class="class-option" data-class="Mage" type="button">✨<span>Mage</span></button>
@@ -300,7 +291,6 @@
       <button class="class-option" data-class="Brawler" type="button">🥊<span>Brawler</span></button>
       <button class="class-option" data-class="Rogue" type="button">🗡️<span>Rogue</span></button>
     </div>
-
     <p id="classMessage" role="status" aria-live="polite"></p>
     <button id="saveClassButton" class="primary" type="button">BEVESTIG CLASS</button>
     <button class="menu-button backToMenu" type="button">← TERUG NAAR MENU</button>
@@ -309,14 +299,16 @@
   <main id="skinScreen" class="panel hidden menu-screen">
     <h1>SKIN</h1>
     <p id="skinDescription" class="muted">Kies eerst een class.</p>
-
     <div class="gender-options">
       <button class="class-option gender-option" data-gender="male" type="button">🧙<span>Male</span></button>
       <button class="class-option gender-option" data-gender="female" type="button">🧝‍♀️<span>Female</span></button>
     </div>
-
     <p id="skinMessage" role="status" aria-live="polite"></p>
-    <button id="saveSkinButton" class="primary" type="button">BEVESTIG SKIN</button>
+    <p class="muted">Sleep over het model om het rond te draaien.</p>
+    <section id="preview" aria-label="3D character preview">
+      <div id="previewHint">Sleep om te draaien</div>
+    </section>
+    <button id="saveSkinButton" class="primary" type="button">SAVE SKIN</button>
     <button class="menu-button backToMenu" type="button">← TERUG NAAR MENU</button>
   </main>
 
@@ -340,79 +332,77 @@
       Kies je basispersonage en kleur. Je kunt het model slepen om het te draaien.
     </p>
 
-    <div class="creator-layout">
-      <section class="settings">
-        <h2>Customize Character</h2>
+    
+<div class="creator-layout">
+  <section class="settings">
+    <h2>Customize Character</h2>
 
-        <label for="modelChoice">Character</label>
-        <select id="modelChoice">
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
+    <label for="modelChoice">Character</label>
+    <select id="modelChoice">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
 
-        <h3>Skin tone</h3>
-        <div id="skinSwatches" class="swatches"></div>
+    <h3>Skin tone</h3>
+    <div id="skinSwatches" class="swatches"></div>
 
-        <label for="skinColor">Custom skin color</label>
-        <div class="color-row">
-          <input id="skinColor" type="color" value="#b9b9b9">
-          <span id="colorLabel">#b9b9b9</span>
-        </div>
-
-        <h3>Appearance editor</h3>
-        <div class="custom-tabs">
-          <button type="button" class="custom-tab active" data-panel="clothingPanel">Clothing</button>
-          <button type="button" class="custom-tab" data-panel="eyesPanel">Eyes</button>
-          <button type="button" class="custom-tab" data-panel="mouthPanel">Mouth</button>
-          <button type="button" class="custom-tab" data-panel="extraPanel">Other</button>
-        </div>
-
-        <div id="clothingPanel" class="custom-panel">
-          <label for="clothingColor">Clothing color</label>
-          <input id="clothingColor" type="color" value="#496a9c">
-          <p class="muted small">Clothing color selection — model separation required to apply it to clothing only.</p>
-        </div>
-
-        <div id="eyesPanel" class="custom-panel hidden">
-          <label for="eyeColor">Eye color</label>
-          <select id="eyeColor">
-            <option value="#4b3022">Brown</option>
-            <option value="#4169a1">Blue</option>
-            <option value="#47744c">Green</option>
-            <option value="#222222">Black</option>
-            <option value="#888888">Grey</option>
-          </select>
-        </div>
-
-        <div id="mouthPanel" class="custom-panel hidden">
-          <label for="mouthStyle">Mouth style</label>
-          <select id="mouthStyle">
-            <option value="default">Default</option>
-            <option value="smile">Smile</option>
-            <option value="serious">Serious</option>
-          </select>
-          <p class="muted small">The model needs separate facial features or blend shapes before this can change its appearance.</p>
-        </div>
-
-        <div id="extraPanel" class="custom-panel hidden">
-          <label for="hairColor">Hair color</label>
-          <input id="hairColor" type="color" value="#39281f">
-          <label for="accessory">Accessory</label>
-          <select id="accessory">
-            <option value="none">None</option>
-            <option value="crown">Crown (planned)</option>
-            <option value="glasses">Glasses (planned)</option>
-          </select>
-        </div>
-
-        <button id="save" class="primary" type="button">SAVE CHARACTER</button>
-        <p id="creatorMessage" role="status" aria-live="polite"></p>
-      </section>
-
-      <section id="preview" aria-label="3D character preview">
-        <div id="previewHint">Drag to rotate your character</div>
-      </section>
+    <label for="skinColor">Custom skin color</label>
+    <div class="color-row">
+      <input id="skinColor" type="color" value="#b9b9b9">
+      <span id="colorLabel">#b9b9b9</span>
     </div>
+
+    <h3>Appearance editor</h3>
+    <div class="custom-tabs">
+      <button type="button" class="custom-tab active" data-panel="clothingPanel">Clothing</button>
+      <button type="button" class="custom-tab" data-panel="eyesPanel">Eyes</button>
+      <button type="button" class="custom-tab" data-panel="mouthPanel">Mouth</button>
+      <button type="button" class="custom-tab" data-panel="extraPanel">Other</button>
+    </div>
+
+    <div id="clothingPanel" class="custom-panel">
+      <label for="clothingColor">Clothing color</label>
+      <input id="clothingColor" type="color" value="#496a9c">
+      <p class="muted small">Clothing color selection — model separation required to apply it to clothing only.</p>
+    </div>
+
+    <div id="eyesPanel" class="custom-panel hidden">
+      <label for="eyeColor">Eye color</label>
+      <select id="eyeColor">
+        <option value="#4b3022">Brown</option>
+        <option value="#4169a1">Blue</option>
+        <option value="#47744c">Green</option>
+        <option value="#222222">Black</option>
+        <option value="#888888">Grey</option>
+      </select>
+    </div>
+
+    <div id="mouthPanel" class="custom-panel hidden">
+      <label for="mouthStyle">Mouth style</label>
+      <select id="mouthStyle">
+        <option value="default">Default</option>
+        <option value="smile">Smile</option>
+        <option value="serious">Serious</option>
+      </select>
+      <p class="muted small">The model needs separate facial features or blend shapes before this can change its appearance.</p>
+    </div>
+
+    <div id="extraPanel" class="custom-panel hidden">
+      <label for="hairColor">Hair color</label>
+      <input id="hairColor" type="color" value="#39281f">
+      <label for="accessory">Accessory</label>
+      <select id="accessory">
+        <option value="none">None</option>
+        <option value="crown">Crown (planned)</option>
+        <option value="glasses">Glasses (planned)</option>
+      </select>
+    </div>
+
+    <button id="save" class="primary" type="button">SAVE CHARACTER</button>
+    <p id="creatorMessage" role="status" aria-live="polite"></p>
+  </section>
+
+</div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -421,6 +411,7 @@
     import * as THREE from "three";
     import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
+    // Vul hier je eigen gegevens uit Supabase in.
     const SUPABASE_URL = "https://jpfafbpeexjdljebhzzo.supabase.co";
     const SUPABASE_KEY = "sb_publishable_vRMUoWgWM_5WOtjysEhWZQ_xni9HEiV";
 
@@ -434,93 +425,95 @@
     const modelChoice = document.getElementById("modelChoice");
     const skinColor = document.getElementById("skinColor");
     const colorLabel = document.getElementById("colorLabel");
+    
+const skinTones = [
+  "#F8E1D1", "#F1D0B1", "#E8B995", "#DDA47C", "#CF9169",
+  "#BC8059", "#A96D49", "#925A3C", "#7D4B32", "#693D2B",
+  "#573323", "#46291E", "#352019", "#281915", "#17110F"
+];
 
-    const skinTones = [
-      "#F8E1D1", "#F1D0B1", "#E8B995", "#DDA47C", "#CF9169",
-      "#BC8059", "#A96D49", "#925A3C", "#7D4B32", "#693D2B",
-      "#573323", "#46291E", "#352019", "#281915", "#17110F"
-    ];
+let appearanceOptions = {
+  clothingColor: "#496a9c",
+  eyeColor: "#4b3022",
+  mouthStyle: "default",
+  hairColor: "#39281f",
+  accessory: "none"
+};
 
-    let appearanceOptions = {
-      clothingColor: "#496a9c",
-      eyeColor: "#4b3022",
-      mouthStyle: "default",
-      hairColor: "#39281f",
-      accessory: "none"
-    };
+function renderSkinSwatches() {
+  const container = document.getElementById("skinSwatches");
+  container.innerHTML = "";
 
-    function renderSkinSwatches() {
-      const container = document.getElementById("skinSwatches");
-      container.innerHTML = "";
+  skinTones.forEach(color => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "skin-swatch";
+    button.style.backgroundColor = color;
+    button.title = color;
+    button.setAttribute("aria-label", "Huidskleur " + color);
 
-      skinTones.forEach(color => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "skin-swatch";
-        button.style.backgroundColor = color;
-        button.title = color;
-        button.setAttribute("aria-label", "Huidskleur " + color);
-
-        button.addEventListener("click", () => {
-          skinColor.value = color;
-          colorLabel.textContent = color;
-          applyModelColor(color);
-          updateActiveSwatch();
-        });
-
-        container.appendChild(button);
-      });
-
+    button.addEventListener("click", () => {
+      skinColor.value = color;
+      colorLabel.textContent = color;
+      applyModelColor(color);
       updateActiveSwatch();
-    }
-
-    function updateActiveSwatch() {
-      document.querySelectorAll(".skin-swatch").forEach(button => {
-        const active = button.title.toLowerCase() === skinColor.value.toLowerCase();
-        button.classList.toggle("active", active);
-        button.setAttribute("aria-pressed", String(active));
-      });
-    }
-
-    document.querySelectorAll(".custom-tab").forEach(button => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".custom-tab").forEach(tab => {
-          tab.classList.toggle("active", tab === button);
-        });
-
-        document.querySelectorAll(".custom-panel").forEach(panel => {
-          panel.classList.toggle("hidden", panel.id !== button.dataset.panel);
-        });
-      });
     });
 
-    function readAppearanceControls() {
-      appearanceOptions = {
-        clothingColor: document.getElementById("clothingColor").value,
-        eyeColor: document.getElementById("eyeColor").value,
-        mouthStyle: document.getElementById("mouthStyle").value,
-        hairColor: document.getElementById("hairColor").value,
-        accessory: document.getElementById("accessory").value
-      };
-    }
+    container.appendChild(button);
+  });
 
-    function showAppearanceControls(options = {}) {
-      appearanceOptions = { ...appearanceOptions, ...options };
-      document.getElementById("clothingColor").value = appearanceOptions.clothingColor;
-      document.getElementById("eyeColor").value = appearanceOptions.eyeColor;
-      document.getElementById("mouthStyle").value = appearanceOptions.mouthStyle;
-      document.getElementById("hairColor").value = appearanceOptions.hairColor;
-      document.getElementById("accessory").value = appearanceOptions.accessory;
-    }
+  updateActiveSwatch();
+}
 
-    ["clothingColor", "eyeColor", "mouthStyle", "hairColor", "accessory"]
-      .forEach(id => {
-        document.getElementById(id).addEventListener("change", readAppearanceControls);
-        document.getElementById(id).addEventListener("input", readAppearanceControls);
-      });
+function updateActiveSwatch() {
+  document.querySelectorAll(".skin-swatch").forEach(button => {
+    const active = button.title.toLowerCase() === skinColor.value.toLowerCase();
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
 
-    renderSkinSwatches();
-    showAppearanceControls();
+document.querySelectorAll(".custom-tab").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".custom-tab").forEach(tab => {
+      tab.classList.toggle("active", tab === button);
+    });
+
+    document.querySelectorAll(".custom-panel").forEach(panel => {
+      panel.classList.toggle("hidden", panel.id !== button.dataset.panel);
+    });
+  });
+});
+
+function readAppearanceControls() {
+  appearanceOptions = {
+    clothingColor: document.getElementById("clothingColor").value,
+    eyeColor: document.getElementById("eyeColor").value,
+    mouthStyle: document.getElementById("mouthStyle").value,
+    hairColor: document.getElementById("hairColor").value,
+    accessory: document.getElementById("accessory").value
+  };
+}
+
+function showAppearanceControls(options = {}) {
+  appearanceOptions = { ...appearanceOptions, ...options };
+
+  document.getElementById("clothingColor").value = appearanceOptions.clothingColor;
+  document.getElementById("eyeColor").value = appearanceOptions.eyeColor;
+  document.getElementById("mouthStyle").value = appearanceOptions.mouthStyle;
+  document.getElementById("hairColor").value = appearanceOptions.hairColor;
+  document.getElementById("accessory").value = appearanceOptions.accessory;
+}
+
+["clothingColor", "eyeColor", "mouthStyle", "hairColor", "accessory"]
+  .forEach(id => {
+    document.getElementById(id).addEventListener("change", readAppearanceControls);
+    document.getElementById(id).addEventListener("input", readAppearanceControls);
+  });
+
+renderSkinSwatches();
+showAppearanceControls();
+
 
     let mode = "login";
     let currentUser = null;
@@ -533,9 +526,18 @@
     let lastPointerX = 0;
     let selectedClass = null;
     let selectedGender = null;
+    // De skin-preview gebruikt een tijdelijke keuze; pas SAVE SKIN schrijft die weg.
+    let previewGender = "male";
+
+    const CLASS_MODEL_PATHS = {
+      Ranger:  { male: "./models/classes/ranger_male.glb", female: "./models/classes/ranger_female.glb" },
+      Mage:    { male: "./models/classes/mage_male.glb", female: "./models/classes/mage_female.glb" },
+      Warrior: { male: "./models/classes/warrior_male.glb", female: "./models/classes/warrior_female.glb" },
+      Brawler: { male: "./models/classes/brawler_male.glb", female: "./models/classes/brawler_female.glb" },
+      Rogue:   { male: "./models/classes/rogue_male.glb", female: "./models/classes/rogue_female.glb" }
+    };
 
     const menuScreens = ["mainMenu", "classesScreen", "skinScreen", "settingsScreen", "creator"];
-
     function showMenuScreen(id) {
       authScreen.classList.add("hidden");
       menuScreens.forEach(screenId => document.getElementById(screenId).classList.add("hidden"));
@@ -545,11 +547,9 @@
     function choiceStorageKey() {
       return currentUser ? "realmfall_choices_" + currentUser.id : null;
     }
-
     function loadChoices() {
       const key = choiceStorageKey();
       if (!key) return;
-
       try {
         const saved = JSON.parse(localStorage.getItem(key) || "{}");
         selectedClass = saved.selectedClass || null;
@@ -559,24 +559,18 @@
         selectedGender = null;
       }
     }
-
     function saveChoices() {
       const key = choiceStorageKey();
       if (key) localStorage.setItem(key, JSON.stringify({ selectedClass, selectedGender }));
     }
-
     function updateClassButtons() {
-      document.querySelectorAll(".class-option[data-class]").forEach(button => {
-        button.classList.toggle("active", button.dataset.class === selectedClass);
-      });
+      document.querySelectorAll(".class-option[data-class]").forEach(button =>
+        button.classList.toggle("active", button.dataset.class === selectedClass));
     }
-
     function updateGenderButtons() {
-      document.querySelectorAll(".gender-option").forEach(button => {
-        button.classList.toggle("active", button.dataset.gender === selectedGender);
-      });
+      document.querySelectorAll(".gender-option").forEach(button =>
+        button.classList.toggle("active", button.dataset.gender === selectedGender));
     }
-
     function requireClass() {
       if (!selectedClass) {
         document.getElementById("menuMessage").textContent = "Kies eerst een class via CLASSES!";
@@ -609,10 +603,9 @@
 
     async function openCreator(user) {
       currentUser = user;
-
       const { data, error } = await db
         .from("profiles")
-        .select("username, character_model, skin_color")
+        .select("username, character_model, skin_color, appearance_options")
         .eq("id", user.id)
         .single();
 
@@ -630,7 +623,8 @@
         ? data.skin_color : "#b9b9b9";
       colorLabel.textContent = skinColor.value;
 
-      document.getElementById("welcome").textContent = "Welkom, " + data.username + "  ";
+      document.getElementById("welcome").textContent =
+        "Welkom, " + data.username + "  ";
 
       loadChoices();
       document.getElementById("menuWelcome").textContent = "Welkom, " + data.username + "!";
@@ -770,25 +764,29 @@
       if (renderer && scene && camera) renderer.render(scene, camera);
     }
 
-    function applyModelColor(color) {
-      if (!loadedModel) return;
+    
+function applyModelColor(color) {
+  if (!loadedModel) return;
 
-      loadedModel.traverse(object => {
-        if (!object.isMesh || !object.material) return;
+  loadedModel.traverse(object => {
+    if (!object.isMesh || !object.material) return;
 
-        const materials = Array.isArray(object.material)
-          ? object.material : [object.material];
+    const materials = Array.isArray(object.material)
+      ? object.material : [object.material];
 
-        materials.forEach(material => {
-          material.color.set(color);
-          if ("roughness" in material) material.roughness = 0.9;
-          if ("metalness" in material) material.metalness = 0;
-          material.needsUpdate = true;
-        });
-      });
-    }
+    materials.forEach(material => {
+      material.color.set(color);
 
-    async function loadCharacter(modelType) {
+      // Minder glans en een neutralere, gelijkmatigere weergave.
+      if ("roughness" in material) material.roughness = 0.9;
+      if ("metalness" in material) material.metalness = 0;
+
+      material.needsUpdate = true;
+    });
+  });
+}
+
+    async function loadCharacter(modelType, className = selectedClass) {
       const version = ++loadVersion;
       creatorMessage.textContent = "Model laden...";
 
@@ -798,15 +796,29 @@
       }
 
       const loader = new GLTFLoader();
-      const path = modelType === "female"
-        ? "./models/female.glb"
-        : "./models/male.glb";
+      const basePath = modelType === "female" ? "./models/female.glb" : "./models/male.glb";
+      const classPath = CLASS_MODEL_PATHS[className]?.[modelType];
+      let usedPath = basePath;
 
       try {
-        const gltf = await loader.loadAsync(path);
+        let gltf;
+        // Eerst het model voor de gekozen class proberen. Als dat bestand nog niet bestaat,
+        // gebruik dan het bestaande male.glb/female.glb-model als tijdelijke fallback.
+        if (classPath) {
+          try {
+            gltf = await loader.loadAsync(classPath);
+            usedPath = classPath;
+          } catch (_) {
+            gltf = await loader.loadAsync(basePath);
+          }
+        } else {
+          gltf = await loader.loadAsync(basePath);
+        }
         if (version !== loadVersion) return;
 
         const model = gltf.scene;
+
+        // Centreer het model en schaal het naar een bruikbare hoogte.
         let bounds = new THREE.Box3().setFromObject(model);
         const size = bounds.getSize(new THREE.Vector3());
 
@@ -838,32 +850,54 @@
         });
 
         loadedModel = model;
-        modelRoot.add(model);
+modelRoot.add(model);
 
-        try {
-          const shirtGltf = await loader.loadAsync("models/navy_shirt.glb");
-          if (version !== loadVersion) {
-            modelRoot.remove(model);
-            return;
-          }
+// Laad het losse shirt boven op het spelersmodel.
+try {
+  const shirtGltf = await loader.loadAsync("models/navy_shirt.glb");
 
-          const shirt = shirtGltf.scene;
-          shirt.position.set(0, 0, 0);
-          model.add(shirt);
-          window.loadedShirt = shirt;
-        } catch (error) {
-          console.error("Shirt kon niet worden geladen:", error);
-        }
+  if (version !== loadVersion) {
+    modelRoot.remove(model);
+    return;
+  }
 
-        applyModelColor(skinColor.value);
+const shirt = shirtGltf.scene;
+
+// Afmetingen van het spelersmodel
+const bodyBounds = new THREE.Box3().setFromObject(model);
+const bodySize = bodyBounds.getSize(new THREE.Vector3());
+
+// Afmetingen van het shirt voordat het aan het lichaam hangt
+const shirtBounds = new THREE.Box3().setFromObject(shirt);
+const shirtSize = shirtBounds.getSize(new THREE.Vector3());
+const shirtCenter = shirtBounds.getCenter(new THREE.Vector3());
+
+// Schaal het shirt ten opzichte van de breedte van de romp
+const targetWidth = bodySize.x * 0.48;
+const scaleFactor = targetWidth / shirtSize.x;
+
+shirt.scale.setScalar(1);
+shirt.position.set(0, 0, 0);
+
+model.add(shirt);
+window.loadedShirt = shirt;
+} catch (error) {
+  console.error("Shirt kon niet worden geladen:", error);
+}
+
+applyModelColor(skinColor.value);
         camera.position.set(0, 1.4, 5.5);
         camera.lookAt(0, 1.2, 0);
-        creatorMessage.textContent = "Model geladen!";
+        creatorMessage.textContent = usedPath === classPath && classPath
+          ? "Classmodel geladen: " + className + " (" + modelType + ")."
+          : "Basismodel geladen. Voeg voor " + className + " een classmodel toe om het uiterlijk te veranderen.";
+        document.getElementById("skinMessage").textContent = creatorMessage.textContent;
       } catch (error) {
         if (version !== loadVersion) return;
         creatorMessage.textContent =
           "Model kon niet worden geladen: " + error.message +
           ". Controleer of models/" + modelType + ".glb bestaat.";
+        document.getElementById("skinMessage").textContent = creatorMessage.textContent;
       }
     }
 
@@ -871,11 +905,11 @@
       loadCharacter(modelChoice.value);
     });
 
-    skinColor.addEventListener("input", () => {
-      colorLabel.textContent = skinColor.value;
-      applyModelColor(skinColor.value);
-      updateActiveSwatch();
-    });
+  skinColor.addEventListener("input", () => {
+  colorLabel.textContent = skinColor.value;
+  applyModelColor(skinColor.value);
+  updateActiveSwatch();
+});
 
     document.getElementById("save").addEventListener("click", async () => {
       if (!currentUser) return;
@@ -887,11 +921,11 @@
       try {
         readAppearanceControls();
 
-        const newChoices = {
-          character_model: modelChoice.value,
-          skin_color: skinColor.value,
-          appearance_options: appearanceOptions
-        };
+const newChoices = {
+  character_model: modelChoice.value,
+  skin_color: skinColor.value,
+  appearance_options: appearanceOptions
+};
 
         const { error } = await db
           .from("profiles")
@@ -929,100 +963,76 @@
 
     document.getElementById("playButton").addEventListener("click", () => {
       if (!requireClass()) return;
-      document.getElementById("menuMessage").textContent =
-        "Gameplay komt later. Gekozen class: " + selectedClass + ".";
+      document.getElementById("menuMessage").textContent = "Gameplay komt later. Gekozen class: " + selectedClass + ".";
     });
-
     document.getElementById("classesButton").addEventListener("click", () => {
-      document.getElementById("classMessage").textContent =
-        selectedClass ? "Huidige keuze: " + selectedClass : "Nog geen class gekozen.";
+      document.getElementById("classMessage").textContent = selectedClass ? "Huidige keuze: " + selectedClass : "Nog geen class gekozen.";
       updateClassButtons();
       showMenuScreen("classesScreen");
     });
-
     document.querySelectorAll(".class-option[data-class]").forEach(button => {
       button.addEventListener("click", () => {
         selectedClass = button.dataset.class;
         updateClassButtons();
-        document.getElementById("classMessage").textContent =
-          "Geselecteerd: " + selectedClass + ". Klik op BEVESTIG CLASS om op te slaan.";
+        document.getElementById("classMessage").textContent = "Geselecteerd: " + selectedClass + ". Klik op BEVESTIG CLASS om op te slaan.";
       });
     });
-
     document.getElementById("saveClassButton").addEventListener("click", () => {
       if (!selectedClass) {
         document.getElementById("classMessage").textContent = "Selecteer eerst een class.";
         return;
       }
-
       saveChoices();
       document.getElementById("classMessage").textContent = selectedClass + " geselecteerd!";
       document.getElementById("menuMessage").textContent = "Class gekozen: " + selectedClass + ".";
       showMenuScreen("mainMenu");
     });
-
     document.getElementById("skinButton").addEventListener("click", () => {
       if (!requireClass()) return;
-
-      document.getElementById("skinDescription").textContent =
-        "Class: " + selectedClass + ". Kies een basis-skin.";
-      document.getElementById("skinMessage").textContent =
-        selectedGender ? "Huidige keuze: " + selectedGender : "Kies male of female.";
-
+      document.getElementById("skinDescription").textContent = "Class: " + selectedClass + ". Kies een basis-skin.";
+      document.getElementById("skinMessage").textContent = selectedGender ? "Huidige keuze: " + selectedGender : "Kies male of female.";
+      previewGender = selectedGender || "male";
+      modelChoice.value = previewGender;
       updateGenderButtons();
       showMenuScreen("skinScreen");
+      setup3D();
+      loadCharacter(previewGender, selectedClass);
     });
-
     document.querySelectorAll(".gender-option").forEach(button => {
       button.addEventListener("click", () => {
         selectedGender = button.dataset.gender;
+        previewGender = selectedGender;
         updateGenderButtons();
-        document.getElementById("skinMessage").textContent =
-          "Geselecteerd: " + selectedGender + ". Klik op BEVESTIG SKIN.";
+        document.getElementById("skinMessage").textContent = "Voorbeeld: " + selectedGender + " " + selectedClass + ". Nog niet opgeslagen.";
+        loadCharacter(previewGender, selectedClass);
       });
     });
-
     document.getElementById("saveSkinButton").addEventListener("click", () => {
       if (!selectedClass) {
         document.getElementById("skinMessage").textContent = "Kies eerst een class.";
         return;
       }
-
-      if (!selectedGender) {
-        document.getElementById("skinMessage").textContent = "Kies eerst male of female.";
-        return;
-      }
-
+      if (!selectedGender) selectedGender = "male";
+      previewGender = selectedGender;
       saveChoices();
-      document.getElementById("menuMessage").textContent =
-        "Skin opgeslagen: " + selectedGender + " " + selectedClass + ".";
+      document.getElementById("menuMessage").textContent = "Skin opgeslagen: " + selectedGender + " " + selectedClass + ".";
       showMenuScreen("mainMenu");
     });
-
-    document.getElementById("settingsButton").addEventListener("click", () => {
-      showMenuScreen("settingsScreen");
-    });
-
-    document.querySelectorAll(".backToMenu").forEach(button => {
-      button.addEventListener("click", () => showMenuScreen("mainMenu"));
-    });
-
+    document.getElementById("settingsButton").addEventListener("click", () => showMenuScreen("settingsScreen"));
+    document.querySelectorAll(".backToMenu").forEach(button => button.addEventListener("click", () => showMenuScreen("mainMenu")));
     document.getElementById("menuLogout").addEventListener("click", async () => {
       const button = document.getElementById("menuLogout");
       button.disabled = true;
-
       try {
         const { error } = await db.auth.signOut();
         if (error) throw error;
-
         currentUser = null;
         currentProfile = null;
         selectedClass = null;
         selectedGender = null;
         showAuth("Je bent uitgelogd.");
       } catch (error) {
-        document.getElementById("menuMessage").textContent =
-          "Uitloggen mislukt: " + error.message;
+        document.getElementById("menuMessage").textContent = "Uitloggen mislukt: " + error.message;
       } finally {
         button.disabled = false;
       }
