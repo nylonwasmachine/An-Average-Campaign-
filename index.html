@@ -248,6 +248,71 @@
     </form>
     <p id="message" role="status" aria-live="polite"></p>
   </main>
+  
+
+<!-- HOOFDMENU -->
+<main id="mainMenu" class="panel hidden">
+  <h1>REALMFALL</h1>
+  <p id="menuWelcome" class="muted" style="text-align:center">
+    Welkom, avonturier.
+  </p>
+
+  <button id="playButton" class="primary" type="button">PLAY</button>
+  <button id="classesButton" class="primary" type="button">CLASSES</button>
+  <button id="skinButton" class="primary" type="button">SKIN</button>
+  <button id="settingsButton" class="primary" type="button">SETTINGS</button>
+  <button id="menuLogout" class="secondary" type="button"
+    style="width:100%; margin-top:12px">UITLOGGEN</button>
+
+  <p id="menuMessage" role="status" aria-live="polite"></p>
+</main>
+
+<!-- CLASSKEUZE -->
+<main id="classesScreen" class="panel hidden">
+  <h1>CHOOSE YOUR CLASS</h1>
+  <p class="muted">Kies hoe jij wilt vechten.</p>
+
+  <div id="classOptions" class="class-options">
+    <button class="class-option" data-class="Ranger" type="button">RANGER</button>
+    <button class="class-option" data-class="Mage" type="button">MAGE</button>
+    <button class="class-option" data-class="Warrior" type="button">WARRIOR</button>
+    <button class="class-option" data-class="Brawler" type="button">BRAWLER</button>
+    <button class="class-option" data-class="Rogue" type="button">ROGUE</button>
+  </div>
+
+  <p id="classMessage" role="status" aria-live="polite"></p>
+  <button id="confirmClass" class="primary" type="button">
+    BEVESTIG CLASS
+  </button>
+  <button id="classesBack" class="secondary" type="button">
+    TERUG
+  </button>
+</main>
+
+<!-- GENDER / BASISMODEL -->
+<main id="skinScreen" class="panel hidden">
+  <h1>CHOOSE YOUR SKIN</h1>
+  <p id="skinDescription" class="muted">
+    Kies een basispersonage voor jouw class.
+  </p>
+
+  <button class="primary gender-option" data-gender="male" type="button">
+    MANNELIJK
+  </button>
+  <button class="primary gender-option" data-gender="female" type="button">
+    VROUWELIJK
+  </button>
+
+  <p id="skinMessage" role="status" aria-live="polite"></p>
+  <button id="skinBack" class="secondary" type="button">TERUG</button>
+</main>
+
+<!-- SETTINGS -->
+<main id="settingsScreen" class="panel hidden">
+  <h1>SETTINGS</h1>
+  <p class="muted">Instellingen komen later.</p>
+  <button id="settingsBack" class="secondary" type="button">TERUG</button>
+</main>
 
   <main id="creator" class="hidden">
     <header class="topbar">
